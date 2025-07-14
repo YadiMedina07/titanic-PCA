@@ -41,7 +41,7 @@ except Exception as e:
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('formulario.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -68,11 +68,11 @@ def predict():
         resultado = model.predict(datos_transformados)[0]
         pred = "🛟 Sobrevive" if resultado == 1 else "⚰️ No sobrevive"
 
-        return render_template('index.html', prediccion=pred)
+        return render_template('formulario.html', prediccion=pred)
 
     except Exception as e:
         logging.error(f"❌ Error en predicción: {str(e)}")
-        return render_template('index.html', prediccion=f"Error: {str(e)}")
+        return render_template('formulario.html', prediccion=f"Error: {str(e)}")
 
 if __name__ == '__main__':
     logging.info("🚢 Iniciando servidor Flask - Predicción Titanic")
