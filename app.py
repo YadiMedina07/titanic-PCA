@@ -48,16 +48,15 @@ def predict():
     try:
         logging.info("🔍 Petición POST recibida")
 
-        # Extraer datos del formulario
-        edad = float(request.form['age'])
-        ticket = float(request.form['ticket'])
-        fare = float(request.form['fare'])
-        sibsp = float(request.form['sibsp'])
-        sex = float(request.form['sex'])
-        parch = float(request.form['parch'])
-        pclass = float(request.form['pclass'])
+        # Extraer datos del formulario con los nombres correctos
+        edad = float(request.form['Age'])
+        ticket = float(request.form['Ticket'])
+        fare = float(request.form['Fare'])
+        sibsp = float(request.form['SibSp'])
+        sex = float(request.form['Sex'])
 
-        input_data = np.array([[edad, ticket, fare, sibsp, sex, parch, pclass]])
+        # Construir input
+        input_data = np.array([[edad, ticket, fare, sibsp, sex]])
         logging.info(f"🧾 Datos recibidos: {input_data}")
 
         # Aplicar PCA
@@ -68,11 +67,12 @@ def predict():
         resultado = model.predict(datos_transformados)[0]
         pred = "🛟 Sobrevive" if resultado == 1 else "⚰️ No sobrevive"
 
-        return render_template('formulario.html', prediccion=pred)
+        return render_template('formulario.html', prediction=pred)
 
     except Exception as e:
         logging.error(f"❌ Error en predicción: {str(e)}")
-        return render_template('formulario.html', prediccion=f"Error: {str(e)}")
+        return render_template('formulario.html', prediction=f"Error: {str(e)}")
+
 
 if __name__ == '__main__':
     logging.info("🚢 Iniciando servidor Flask - Predicción Titanic")
