@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Predicción Titanic</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        input, select { padding: 8px; margin: 8px; width: 200px; }
+        .boton { padding: 10px 20px; background-color: #007BFF; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>¿Sobrevivirías al Titanic?</h1>
+    <form action="/predict" method="post">
+        <input type="number" step="0.01" name="sex" placeholder="Sexo (0 = hombre, 1 = mujer)" required><br>
+        <input type="number" step="0.01" name="fare" placeholder="Tarifa pagada (Fare)" required><br>
+        <input type="number" step="1" name="pclass" placeholder="Clase (1, 2 o 3)" required><br>
+        <input type="number" step="0.01" name="age" placeholder="Edad" required><br>
+        <input type="number" step="1" name="sibsp" placeholder="Hermanos/Pareja a bordo" required><br>
+        <button class="boton" type="submit">Predecir</button>
+    </form>
+
+    {% if prediccion %}
+        <h2>Resultado: {{ prediccion }}</h2>
+    {% endif %}
+</body>
+</html>
