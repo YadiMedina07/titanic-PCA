@@ -1,43 +1,79 @@
 from flask import Flask, render_template, request
-import numpy as np
 import joblib
+import numpy as np
+import logging
+import os
+import warnings
 
-# Inicializar la aplicación Flask
+# Suprimir warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
+
+# Inicializar Flask
 app = Flask(__name__)
 
-# Cargar el modelo entrenado y el transformador PCA
-modelo = joblib.load('titanic_model.pkl')
-pca = joblib.load('pca_model.pkl')
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
-# Ruta para mostrar el formulario
+# Archivos del modelo Titanic
+MODEL_PATH = 'titanic_model.pkl'
+PCA_PATH = 'pca_model.pkl'
+
+# Características utilizadas
+feature_names = ['Age', 'Ticket', 'Fare', 'SibSp', 'Sex', 'Parch', 'Pclass']
+
+# Cargar modelo y PCA
+def load_model_and_pca():
+    if not os.path.exists(MODEL_PATH) or not os.path.exists(PCA_PATH):
+        raise FileNotFoundError("Modelo o PCA no encontrado.")
+    
+    model = joblib.load(MODEL_PATH)
+    pca = joblib.load(PCA_PATH)
+    
+    return model, pca
+
+# Intentar cargar al inicio
+try:
+    model, pca = load_model_and_pca()
+    logging.info("✅ Modelo y PCA cargados correctamente.")
+except Exception as e:
+    logging.error(f"❌ Error al cargar el modelo o PCA: {str(e)}")
+
 @app.route('/')
-def formulario():
-    return render_template('formulario.html')
+def home():
+    return render_template('index.html')
 
-# Ruta para procesar la predicción
 @app.route('/predict', methods=['POST'])
-def predecir():
+def predict():
     try:
-        # Obtener los valores ingresados por el usuario
-        sex = float(request.form['sex'])
+        logging.info("🔍 Petición POST recibida")
+
+        # Extraer datos del formulario
+        edad = float(request.form['age'])
+        ticket = float(request.form['ticket'])
         fare = float(request.form['fare'])
-        pclass = float(request.form['pclass'])
-        age = float(request.form['age'])
         sibsp = float(request.form['sibsp'])
+        sex = float(request.form['sex'])
+        parch = float(request.form['parch'])
+        pclass = float(request.form['pclass'])
 
-        # Crear arreglo y aplicar PCA
-        datos = np.array([[sex, fare, pclass, age, sibsp]])
-        datos_pca = pca.transform(datos)
+        input_data = np.array([[edad, ticket, fare, sibsp, sex, parch, pclass]])
+        logging.info(f"🧾 Datos recibidos: {input_data}")
 
-        # Realizar la predicción
-        prediccion = modelo.predict(datos_pca)[0]
-        resultado = "🛟 Sobrevive" if prediccion == 1 else "⚰️ No sobrevive"
+        # Aplicar PCA
+        datos_transformados = pca.transform(input_data)
+        logging.info(f"📉 Datos tras PCA: {datos_transformados}")
 
-        return render_template('index.html', prediccion=resultado)
+        # Predecir
+        resultado = model.predict(datos_transformados)[0]
+        pred = "🛟 Sobrevive" if resultado == 1 else "⚰️ No sobrevive"
+
+        return render_template('index.html', prediccion=pred)
 
     except Exception as e:
-        return f"Ocurrió un error: {str(e)}"
+        logging.error(f"❌ Error en predicción: {str(e)}")
+        return render_template('index.html', prediccion=f"Error: {str(e)}")
 
-# Ejecutar localmente (no se usa en Render)
 if __name__ == '__main__':
-    app.run(debug=True)
+    logging.info("🚢 Iniciando servidor Flask - Predicción Titanic")
+    app.run(debug=True, host='0.0.0.0', port=5000)
