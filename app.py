@@ -20,7 +20,7 @@ MODEL_PATH = 'titanic_model.pkl'
 PCA_PATH = 'pca_model.pkl'
 
 # Características utilizadas
-feature_names = ['Age', 'Ticket', 'Fare', 'SibSp', 'Sex', 'Parch', 'Pclass']
+feature_names = ['Age', 'Ticket', 'Fare', 'SibSp', 'Sex']
 
 # Cargar modelo y PCA
 def load_model_and_pca():

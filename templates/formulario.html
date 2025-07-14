@@ -2,65 +2,32 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predicción de Supervivencia - Titanic</title>
-    <style>
-        /* (mismos estilos que ya tienes, sin modificar) */
-        /* ... TODO TU CSS ACTUAL ... */
-    </style>
+    <title>¿Sobrevivirías al Titanic?</title>
 </head>
 <body>
-    <div class="container">
-        <div class="app-header">
-            <div class="app-title">¿Sobrevivirías al Titanic?</div>
-        </div>
+    <h2>¿Sobrevivirías al Titanic?</h2>
 
-        <div class="form-container">
-            <form action="/predict" method="post">
-                <div class="input-group">
-                    <label class="input-label" for="age">Edad</label>
-                    <input type="number" id="age" name="age" class="input-field" placeholder="Ej. 28" required step="0.1" min="0">
-                </div>
+    <form action="/predict" method="post">
+        <label>Edad</label>
+        <input type="number" name="Age" placeholder="Ej. 28" step="0.1" required><br>
 
-                <div class="input-group">
-                    <label class="input-label" for="ticket">Número de Ticket</label>
-                    <input type="number" id="ticket" name="ticket" class="input-field" placeholder="Ej. 17463" required step="1" min="1">
-                </div>
+        <label>Número de Ticket</label>
+        <input type="number" name="Ticket" placeholder="Ej. 17463" required><br>
 
-                <div class="input-group">
-                    <label class="input-label" for="fare">Tarifa (Fare)</label>
-                    <input type="number" id="fare" name="fare" class="input-field" placeholder="Ej. 72.50" required step="0.01" min="0">
-                </div>
+        <label>Tarifa (Fare)</label>
+        <input type="number" name="Fare" placeholder="Ej. 72.50" step="0.01" required><br>
 
-                <div class="input-group">
-                    <label class="input-label" for="sibsp">Hermanos/Pareja a bordo (SibSp)</label>
-                    <input type="number" id="sibsp" name="sibsp" class="input-field" placeholder="Ej. 1" required step="1" min="0">
-                </div>
+        <label>Hermanos/Pareja a bordo (SibSp)</label>
+        <input type="number" name="SibSp" placeholder="Ej. 1" required><br>
 
-                <div class="input-group">
-                    <label class="input-label" for="sex">Sexo (0 = Hombre, 1 = Mujer)</label>
-                    <input type="number" id="sex" name="sex" class="input-field" placeholder="Ej. 1" required step="1" min="0" max="1">
-                </div>
+        <label>Sexo (0 = Hombre, 1 = Mujer)</label>
+        <input type="number" name="Sex" placeholder="Ej. 1" min="0" max="1" required><br><br>
 
-                <div class="input-group">
-                    <label class="input-label" for="parch">Padres/Hijos a bordo (Parch)</label>
-                    <input type="number" id="parch" name="parch" class="input-field" placeholder="Ej. 0" required step="1" min="0">
-                </div>
+        <button type="submit">Predecir</button>
+    </form>
 
-                <div class="input-group">
-                    <label class="input-label" for="pclass">Clase (1 = Alta, 2 = Media, 3 = Baja)</label>
-                    <input type="number" id="pclass" name="pclass" class="input-field" placeholder="Ej. 2" required step="1" min="1" max="3">
-                </div>
-
-                <button type="submit" class="submit-btn">Predecir</button>
-
-                {% if prediccion %}
-                    <div class="result-container result-success">
-                        🧭 Resultado: {{ prediccion }}
-                    </div>
-                {% endif %}
-            </form>
-        </div>
-    </div>
+    {% if prediction is not none %}
+        <p>🧭 Resultado: {{ prediction }}</p>
+    {% endif %}
 </body>
 </html>
